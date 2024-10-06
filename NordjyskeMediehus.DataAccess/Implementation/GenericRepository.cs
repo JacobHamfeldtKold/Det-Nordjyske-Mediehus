@@ -1,4 +1,5 @@
-﻿using NordjyskeMediehus.DataAccess.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using NordjyskeMediehus.DataAccess.Context;
 using NordjyskeMediehus.Domain.Repository;
 using System;
 using System.Collections.Generic;
@@ -16,20 +17,20 @@ namespace NordjyskeMediehus.DataAccess.Implementation
             _context = context;
         }
 
-        public T GetById(int id) 
+        public async Task<T> GetById(int id) 
         {
-            return _context.Set<T>().Find(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public int Add(T entity)
+        public async Task<int> Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
     }
 }

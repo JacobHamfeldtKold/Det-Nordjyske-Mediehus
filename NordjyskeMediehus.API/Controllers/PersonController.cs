@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NordjyskeMediehus.API.HelperClasses;
 using NordjyskeMediehus.Domain.Entities;
 using NordjyskeMediehus.Domain.Repository;
 using System.Net.Mime;
@@ -28,28 +29,37 @@ namespace NordjyskeMediehus.API.Controllers
         /// <param name="person"></param>
         /// <returns></returns>
         [HttpGet]
-        public  ActionResult<List<Person>> GetAll()
-            => Ok( _personRepository.GetAll());
+        [ProducesResponseType(typeof(List<Person>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<ActionResult<List<Person>>> GetAll()
+        {
+            var entities = await _personRepository.GetAll();
+            if (entities != null)
+                return Ok(entities);
+            else
+                return NotFound(new ArgumentNullException());
+        }
 
 
         /// <summary>
         /// Get a person with the specified ID's Name and phone number. 
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Person),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult<Person> GetById(int id)
+        public async Task<ActionResult<Person>> GetById(int id)
         {
-            var entity = _personRepository.GetById(id);
+            var entity = await _personRepository.GetById(id);
 
             if (entity != null)
                 return Ok(entity);
             else
-                return NotFound(new ArgumentNullException());
+                return NotFound("No object with this id");
         }
 
         /// <summary>
@@ -58,14 +68,17 @@ namespace NordjyskeMediehus.API.Controllers
         /// <param name="person"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Person),StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<string> CreatePerson([FromBody] Person person)
+        public async Task<ActionResult<string>> CreatePerson([FromBody] Person person)
         {
             if (person is null)
                 return BadRequest(new ArgumentNullException());
 
-           _personRepository.Add(person);
+            if(!PhoneNumber.IsPhoneNbr(person.PhoneNumber))
+                return BadRequest("Wrong phone number format");
+
+            await _personRepository.Add(person);
 
             return CreatedAtAction(nameof(GetById), new { id = person.Id }, person);
         }
