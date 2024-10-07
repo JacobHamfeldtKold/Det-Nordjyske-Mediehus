@@ -4,6 +4,7 @@ using NordjyskeMediehus.API.HelperClasses;
 using NordjyskeMediehus.Domain.Entities;
 using NordjyskeMediehus.Domain.Repository;
 using System.Net.Mime;
+using NordjyskeMediehus.Domain.DtoEntities;
 
 namespace NordjyskeMediehus.API.Controllers
 {
@@ -26,7 +27,7 @@ namespace NordjyskeMediehus.API.Controllers
         /// <summary>
         /// Get all names and phone numbers in the API's database 
         /// </summary>
-        /// <param name="person"></param>
+        /// <param></param>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<Person>), StatusCodes.Status200OK)]
@@ -65,18 +66,25 @@ namespace NordjyskeMediehus.API.Controllers
         /// <summary>
         /// Add and new person with Name and phone number to the API's database by posting a Person in the body
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="personDTO"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Person),StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> CreatePerson([FromBody] Person person)
+        public async Task<ActionResult<string>> CreatePerson([FromBody] PersonDTO personDTO)
         {
-            if (person is null)
+            if (personDTO is null)
                 return BadRequest(new ArgumentNullException());
 
-            if(!PhoneNumber.IsPhoneNbr(person.PhoneNumber))
+            if(!PhoneNumber.IsPhoneNbr(personDTO.phoneNumber))
                 return BadRequest("Wrong phone number format");
+
+            Person person = new Person()
+            {
+                firstName = personDTO.firstName,
+                lastName = personDTO.lastName,
+                phoneNumber = personDTO.phoneNumber,
+            };
 
             await _personRepository.Add(person);
 

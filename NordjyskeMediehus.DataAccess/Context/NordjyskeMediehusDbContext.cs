@@ -19,7 +19,7 @@ namespace NordjyskeMediehus.DataAccess.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>().HasData(
-                new Person {Id = 1, FirstName = "Jacob", LastName = "Hamfeldt Kold", PhoneNumber = "42791739"}
+                new Person {Id = 1, firstName = "Jacob", lastName = "Hamfeldt Kold", phoneNumber = "42791739"}
                 );
         }
 

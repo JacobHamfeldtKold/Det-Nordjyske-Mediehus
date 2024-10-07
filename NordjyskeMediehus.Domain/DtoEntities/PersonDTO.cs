@@ -8,10 +8,10 @@ namespace NordjyskeMediehus.Domain.DtoEntities
 {
     public class PersonDTO
     {
-        public string FirstName { get; set; }
+        public string firstName { get; set; }
 
-        public string LastName { get; set; }
+        public string lastName { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string phoneNumber { get; set; }
     }
 }

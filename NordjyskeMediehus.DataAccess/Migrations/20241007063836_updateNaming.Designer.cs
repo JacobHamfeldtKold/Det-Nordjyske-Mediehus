@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NordjyskeMediehus.DataAccess.Context;
 
@@ -10,9 +11,11 @@ using NordjyskeMediehus.DataAccess.Context;
 namespace NordjyskeMediehus.DataAccess.Migrations
 {
     [DbContext(typeof(NordjyskeMediehusDbContext))]
-    partial class NordjyskeMediehusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007063836_updateNaming")]
+    partial class updateNaming
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
